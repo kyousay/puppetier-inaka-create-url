@@ -2,9 +2,13 @@ const puppeteer = require('puppeteer');
 const target = require('../target.json');
 const fs = require('fs');
 
+type URLObject = {
+    [k: string]: string
+}
+
 (async () => {
     const data = JSON.parse(fs.readFileSync('./target.json', 'utf8'));
-    let url : any = {};
+    let url : URLObject = {};
     const options = {
         headless: false, // ヘッドレスをオフに
         slowMo: 100  // 動作を遅く
@@ -26,10 +30,13 @@ const fs = require('fs');
             await areaBtn[j].click();
 
             await page.waitFor('.searchtable input[type="checkbox"]');
-            await page.$$eval('.searchtable input[type="checkbox"]', (checks: any) => checks.forEach((c: any)=> c.checked = true));
+            await page.$$eval('.searchtable input[type="checkbox"]', (checks: HTMLInputElement[]) => checks.forEach((c: HTMLInputElement)=> c.checked = true));
 
-            const title = await page.$eval('.ui-section-title', (item: any) => {
-                const text = item.textContent.match(/.+(?=のエリアから賃貸情報探し)/)[0];
+            const title = await page.$eval('.ui-section-title', (item: HTMLHeadingElement) => {
+                let text = item.textContent;
+                if(text) {
+                    text = text.match(/.+(?=のエリアから賃貸情報探し)/)![0]
+                }
                 return text;
             });
 
