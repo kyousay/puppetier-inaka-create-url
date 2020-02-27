@@ -1,0 +1,24 @@
+{
+  "name": "url-creater",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npx ts-node ./src/inaka-url.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "puppeteer": "^2.1.1",
+    "xlsx": "^0.15.5"
+  },
+  "devDependencies": {
+    "@types/node": "^13.7.4",
+    "@types/puppeteer": "^2.0.0",
+    "@types/xlsx": "0.0.36",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.8.2"
+  }
+}
