@@ -1,19 +1,16 @@
-const puppeteer = require('puppeteer');
-const target = require('../target.json');
-const fs = require('fs');
+import fs from 'fs';
+import path from 'path';
+import puppeteer, { LaunchOptions } from 'puppeteer';
+const targetPath = path.resolve('./target.json');
 
-type URLObject = {
-    [k: string]: string
-}
+import { URLObject } from '../types/util'
 
-(async () => {
-    const data = JSON.parse(fs.readFileSync('./target.json', 'utf8'));
+module.exports = async (options: LaunchOptions) => {
+    const data = JSON.parse(fs.readFileSync(targetPath, 'utf8'));
     let url : URLObject = {};
-    const options = {
-        headless: false, // ヘッドレスをオフに
-        slowMo: 100  // 動作を遅く
-    };
+    
     const browser = await puppeteer.launch(options);
+    
     for(let i of Object.keys(data)){
 
         const page = await browser.newPage();
@@ -33,7 +30,7 @@ type URLObject = {
             await page.$$eval('.searchtable input[type="checkbox"]', (checks: HTMLInputElement[]) => checks.forEach((c: HTMLInputElement)=> c.checked = true));
 
             const title = await page.$eval('.ui-section-title', (item: HTMLHeadingElement) => {
-                let text = item.textContent;
+                let text = item.textContent!;
                 if(text) {
                     text = text.match(/.+(?=のエリアから賃貸情報探し)/)![0]
                 }
@@ -60,4 +57,4 @@ type URLObject = {
     }
     fs.writeFileSync('output.json', JSON.stringify(url, undefined, "\t"));
     await browser.close();
-})();
+};
