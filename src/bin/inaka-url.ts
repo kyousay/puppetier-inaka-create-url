@@ -3,8 +3,6 @@ import path from 'path';
 import puppeteer, { LaunchOptions } from 'puppeteer';
 const targetPath = path.resolve('./target.json');
 
-import { URLObject } from '../types/util'
-
 module.exports = async (options: LaunchOptions) => {
     const data = JSON.parse(fs.readFileSync(targetPath, 'utf8'));
     let url : URLObject = {};
@@ -27,9 +25,9 @@ module.exports = async (options: LaunchOptions) => {
             await areaBtn[j].click();
 
             await page.waitFor('.searchtable input[type="checkbox"]');
-            await page.$$eval('.searchtable input[type="checkbox"]', (checks: HTMLInputElement[]) => checks.forEach((c: HTMLInputElement)=> c.checked = true));
+            await page.$$eval('.searchtable input[type="checkbox"]', (checks:any[]) => checks.forEach((c:any)=> c.checked = true));
 
-            const title = await page.$eval('.ui-section-title', (item: HTMLHeadingElement) => {
+            const title = await page.$eval('.ui-section-title', (item) => {
                 let text = item.textContent!;
                 if(text) {
                     text = text.match(/.+(?=のエリアから賃貸情報探し)/)![0]
